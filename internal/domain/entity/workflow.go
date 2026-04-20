@@ -1,6 +1,7 @@
 package entity
 
 type Workflow struct {
-	Name string
-	Jobs []Job
+	Name   string
+	Runner string
+	Jobs   []Job
 }

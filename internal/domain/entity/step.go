@@ -1,6 +1,6 @@
 package entity
 
-type Step struct {
-	Type       string
-	Parameters map[string]string
+type Step interface {
+	Type() string
+	Args() ([]string, error)
 }

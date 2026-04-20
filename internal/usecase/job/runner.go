@@ -2,6 +2,7 @@ package job
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/natanchagas/go-workflow/internal/domain/entity"
 	"github.com/natanchagas/go-workflow/internal/usecase/port"
@@ -12,16 +13,20 @@ type Runner interface {
 }
 
 type runner struct {
-	executor port.StepExecutor
+	executors map[string]port.StepExecutor
 }
 
-func NewRunner(executor port.StepExecutor) Runner {
-	return &runner{executor: executor}
+func NewRunner(executors map[string]port.StepExecutor) Runner {
+	return &runner{executors: executors}
 }
 
 func (r *runner) Run(ctx context.Context, job entity.Job) error {
+	executor, ok := r.executors[job.Runner]
+	if !ok {
+		return fmt.Errorf("unknown runner %q", job.Runner)
+	}
 	for _, step := range job.Steps {
-		if err := r.executor.Execute(ctx, step); err != nil {
+		if err := executor.Execute(ctx, step); err != nil {
 			return err
 		}
 	}

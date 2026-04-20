@@ -13,8 +13,13 @@ func New() *Runner {
 	return &Runner{}
 }
 
-func (r *Runner) Execute(_ context.Context, step entity.Step) error {
-	// TODO: implement Docker-based step execution using step.Type and step.Parameters
-	_ = fmt.Sprintf("docker run step type=%s", step.Type)
-	return nil
+func (r *Runner) Execute(_ context.Context, s entity.Step) error {
+	args, err := s.Args()
+	if err != nil {
+		return err
+	}
+
+	// TODO: spin up a container and run: docker exec <container> args...
+	_ = args
+	return fmt.Errorf("docker runner: not yet implemented")
 }
